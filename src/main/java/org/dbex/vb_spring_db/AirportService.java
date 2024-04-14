@@ -85,11 +85,9 @@ public class AirportService {
 
     public List<AirportDTO> findFilteredAirportsByCountryAsRoot(AirportFilter airportFilter) {
         Set<AirportDTO> filteredAirports = new HashSet<>();
-        // Fetch all countries in a single query
-        Set<CountryDTO> countries = (Set<CountryDTO>) countryRepository.findByIso2CountryCodeIn(airportFilter.countryIso2Codes());        // Fetch all cities for the fetched countries in a single query
+        Set<CountryDTO> countries = (Set<CountryDTO>) countryRepository.findByIso2CountryCodeIn(airportFilter.countryIso2Codes());
         List<Long> countryIds = countries.stream().map(CountryDTO::getId).collect(Collectors.toList());
         List<CityDTO> cities = cityRepository.findByCountryIdIn(countryIds);
-        // Fetch all airports for the fetched cities in a single query
         List<Long> cityIds = cities.stream().map(CityDTO::getId).collect(Collectors.toList());
         List<AirportDTO> airports = airportRepository.findByCityIdInAndFilter(cityIds, airportFilter);
         filteredAirports.addAll(airports);
